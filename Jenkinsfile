@@ -1,6 +1,15 @@
 pipeline {
     agent {
-        docker { image 'python:3.11' }
+        docker {
+            image 'python:3.11-slim'
+            // '--user root' is used here to allow pip to install packages inside the container.
+            // This is acceptable in CI/CD pipelines because Docker already isolates
+            // the container from the host system.
+            // In production environments (e.g. a web server), running as root should be
+            // avoided since an attacker who gains access to the container would have
+            // full privileges.
+            args '--user root'
+        }
     }
 
     environment {
